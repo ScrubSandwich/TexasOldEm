@@ -23,7 +23,7 @@ public class TexasCodeEm {
     PrintWriter out;
     
     private final int PORT = 1492;
-    private int clientNumber = -1;  
+    public static int clientNumber = -1;  
     private final int MAX_PLAYERS = 5;
     private int numPlayers = 0;
     public boolean gameOver = false;
@@ -71,8 +71,7 @@ public class TexasCodeEm {
                     } else if (clientNumber == 2){
                         bigBlind = sesh;
                     }
-                    
-                    //change this line after to ZERO not -1/////////////////////////////////////////////////////////////    <-  LOOK
+                                        
                     if (numPlayers >= -1 && handOver){
                         handOver = false;
                         
@@ -148,7 +147,7 @@ public class TexasCodeEm {
         
         //send each client a signal to let them know that cards are dealt
         //so they can be displayed
-        //Example formats for duece of diamonds and ace of spaces: dealcomplete|7DAS
+        //Example formats for duece of diamonds and ace of spaces: dealcomplete|7D:AS
         for (Session player : TexasCodeEm.players){
             if (player.isInHand()){
                  player.sendMessage("dealcomplete|" + player.getCard1().toString() + ":" + player.getCard2().toString());

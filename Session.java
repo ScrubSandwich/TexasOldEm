@@ -32,6 +32,8 @@ public class Session extends Thread{
     private int position;
     private boolean inHand = false;
     
+    private int chipCount = 5000;
+    
     public Session(int id, Socket socket) throws IOException{
         this.id = id;
         this.socket = socket;
@@ -58,7 +60,19 @@ public class Session extends Thread{
         
         try {
             //First message recieved from a client is it's username
-            this.setUsername(getMessage());
+            
+            String first = getMessage();
+            
+            this.setUsername(first);
+            
+            //Send info about every other player
+            for (Session player : TexasCodeEm.players){
+                    
+                    if (!player.equals(this)){
+                        player.sendMessage("addplayer|" + player.getUsername() + ":" + player.getChipCount() + ":" + player.getPosition());
+                    }
+                    
+            }
             
             while (running){
                 try {
@@ -70,7 +84,8 @@ public class Session extends Thread{
                     //do smoething here////
                 } catch (IOException e) {
                     //sendMessage(this.username + " has left the table");
-                    System.out.println("Error in player with username: " + this.username);
+                    System.out.println(this.username + " has left the table");
+                    TexasCodeEm.clientNumber--;
                     stopRunning();
                 }
             }
@@ -133,4 +148,11 @@ public class Session extends Thread{
         this.position = p;
     }
     
+    public void setChipCount(int v){
+        this.chipCount = v;
+    }
+    
+    public int getChipCount(){
+        return this.chipCount;
+    }    
 }

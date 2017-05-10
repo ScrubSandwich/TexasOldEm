@@ -29,6 +29,7 @@ public class Client extends JFrame {
     
     private int id;
     private String username;
+    private int chipCount = 5000;
     
     private Socket socket;
     private final String SERVERIP = "localhost";
@@ -48,7 +49,7 @@ public class Client extends JFrame {
     private String card1Suit;
     private String card2Val;
     private String card2Suit;
-    
+        
     private int currentBet = 0;
     
     public Client() {
@@ -57,13 +58,16 @@ public class Client extends JFrame {
         height = (int) screenSize.getHeight();
         height -= (height / 20);        
         
-        try{
-            //get username
-            //this.username = JOptionPane.showInputDialog(null, "Username: ", "Enter Screen Name", JOptionPane.INFORMATION_MESSAGE);
-            this.username = "Obama";
-            
+        //this.username = JOptionPane.showInputDialog(null, "Username: ", "Enter Username", JOptionPane.INFORMATION_MESSAGE);
+        this.username = "ScrubSandwich";
+        
+        try{            
             setUpUserInterface();
             establishConnection();
+            btnCall.setEnabled(false);
+            btnFold.setEnabled(false);
+            btnCheck.setEnabled(false);
+            btnRaise.setEnabled(false);
             
             //First thing a client does is sends its username
             sendMessage(this.username);            
@@ -78,24 +82,36 @@ public class Client extends JFrame {
             // Read server response
             String message = getMessage();
             
-            //Decide what to do with the recieved message
-            if (message.equals("nexthand")){
-                playing = true;
-            } else if (message.startsWith("dealcomplete")){
-                //decrypt the cards. format will be: valueNumber:secondValueSecondNumber e.g., JH4S
-                
-                //Get each cardValue and suit
-                this.card1Val = message.substring(13, 14);
-                this.card1Suit = message.substring(14, 15);
-                
-                this.card2Val = message.substring(16, 17);
-                this.card2Suit = message.substring(17, 18);
-                
-                //Now show the cards in the game
-                displayCards();
-            }else if (message.equals("getaction")){
-                showActionButtons();
-            }
+            System.out.println("Message: " + message);
+            
+            processRequest(message);            
+        }
+    }
+    
+    //Decide what to do with the recieved message
+    public void processRequest(String message){
+        
+        if (message.equals("nexthand")){
+            playing = true;
+        } else if (message.startsWith("dealcomplete")){
+            //decrypt the cards. format will be: valueNumber:secondValueSecondNumber e.g., JH4S
+
+            //Get each cardValue and suit
+            this.card1Val = message.substring(13, 14);
+            this.card1Suit = message.substring(14, 15);
+
+            this.card2Val = message.substring(16, 17);
+            this.card2Suit = message.substring(17, 18);
+
+            //Now show the cards in the game
+            displayCards();
+        } else if (message.equals("getaction")){
+            System.out.println("Message is getaction");
+            showActionButtons();
+        } else if (message.startsWith("addplayer")){
+            //command format: addplayer|username:chipCount:position (which is an int)
+            
+            displayOtherPlayer1Cards();
         }
     }
 
@@ -110,26 +126,49 @@ public class Client extends JFrame {
         setLayout(new BorderLayout());       
         setSize(width, height); 
         
-        window = new Window(width, height);
+        window = new Window(width, height, this.username);
         add(window, BorderLayout.CENTER);
         
         buttonPane = new ButtonPane();
         buttonPane.setLayout(new GridLayout(0, 6, 10, 0));
         add(buttonPane, BorderLayout.SOUTH);
                 
-        buttonPane.add(btnCheck);
+        //buttonPane.add(btnCheck);
         buttonPane.add(btnCall);
         buttonPane.add(btnRaise);
         buttonPane.add(btnFold);
+        buttonPane.add(btnCheck);
         
-        btnCall.addActionListener(new ActionListener() {
-            
+        btnCheck.addActionListener(new ActionListener() {            
             @Override
             public void actionPerformed(ActionEvent e) {
-                sendMessage();
-            }  
+                //sendMessage("HI");
+                System.out.println("Check Button Pressed");
+            }       
+        });
         
+        btnCall.addActionListener(new ActionListener() {            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //sendMessage("HI");
+                System.out.println("Call Button Pressed");
+            }       
+        });
         
+        btnRaise.addActionListener(new ActionListener() {            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //sendMessage("HI");
+                System.out.println("Raise Button Pressed");
+            }          
+        });
+        
+        btnFold.addActionListener(new ActionListener() {            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //sendMessage("HI");
+                System.out.println("Fold Button Pressed");
+            }          
         });
         
         setVisible(true);       
@@ -137,13 +176,15 @@ public class Client extends JFrame {
     
     @Override
     public void repaint(){
-        window.repaint();
+        //window.repaint();
     }
     
     private void showActionButtons(){
         
-        //this.validate();
-        //button.setVisible(true);
+        btnCall.setEnabled(true);
+        btnFold.setEnabled(true);
+        btnCheck.setEnabled(true);
+        btnRaise.setEnabled(true);
     }
     
     private void establishConnection() throws IOException{
@@ -181,8 +222,13 @@ public class Client extends JFrame {
         window.setCard1Suit(this.card1Suit);
         window.setCard2Val(this.card2Val);
         window.setCard2Suit(this.card2Suit);
-        //window.repaint();
+        window.repaint();
         
+    }
+    
+    private void displayOtherPlayer1Cards(){
+        window.readyDrawOtherCards1 = true;
+        window.repaint();
     }
 
     private void updateChatBox(String message){
@@ -201,7 +247,5 @@ public class Client extends JFrame {
     public static void main(String[] args){        
         Client client = new Client();
         client.run();       
-    }  
-
-    
+    }    
 }
