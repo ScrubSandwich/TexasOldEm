@@ -29,10 +29,16 @@ public class TexasCodeEm {
     public boolean gameOver = false;
     public boolean handOver = true;
     
+    //  Integers representing the position at the table
     final int DEALER = 0;
     final int SB = 1;
     final int BB = 2;
-    final int NB = 3;
+    final int UTG1 = 3;
+    final int UTG2 = 4;
+    final int UTG3 = 5;
+    final int HJ = 6;
+    final int LJ = 7;
+    final int CO = 8;
             
     public TexasCodeEm(){
         startGame();
@@ -43,9 +49,13 @@ public class TexasCodeEm {
         startServer();
     }
     
+    public void prepareDeck(){
+        deck = new Deck();
+        deck.shuffle();
+    }
+    
     public void startServer(){
-        try {           
-            
+        try {            
             System.out.println("Texas Code 'Em Server V. 1.0.0");
             System.out.println("______________________________");
             System.out.println();
@@ -53,24 +63,19 @@ public class TexasCodeEm {
 
             listener = new ServerSocket(PORT);
             System.out.println("Server sucessfully started on port " + this.PORT);
-
-            while (!gameOver) {
+            
+            run();
+            
+        } catch (Exception e){
+            System.out.println(e);
+        }
+    }
+    
+    // The main game loop
+    private void run() {
+        while (!gameOver) {
                 try {
-                    // Wait for next client connection
-                    socket = listener.accept();
-                    System.out.println("New player joined and assigned the ID: " + (++clientNumber));
-
-                    Session sesh = new Session(clientNumber, socket);                
-                    players.add(sesh);
-                    sesh.start();  
-                    
-                    if (clientNumber == 0){
-                        dealer = sesh;
-                    } else if (clientNumber == 1){
-                        smallBlind = sesh;
-                    } else if (clientNumber == 2){
-                        bigBlind = sesh;
-                    }
+                    getNextClient();
                                         
                     if (numPlayers >= -1 && handOver){
                         handOver = false;
@@ -93,15 +98,34 @@ public class TexasCodeEm {
                 } catch (Exception e){
                     System.out.println("Server Error: " + e);
                     this.gameOver = true;
-                    closeServerSocket();
-                    sendGameOverSignal();
+                    try {
+                        closeServerSocket();
+                        sendGameOverSignal();
+                    } catch (Exception ex) {
+                        // Do nothing
+                    }
+                    
                 }
             }
-        } catch (Exception e){
-            System.out.println(e);
-        }
     }
     
+    // Wait for next client connection
+    private void getNextClient() throws Exception {        
+        socket = listener.accept();
+        System.out.println("New player joined and assigned the ID: " + (++clientNumber));
+
+        Session sesh = new Session(clientNumber, socket);                
+        players.add(sesh);
+        sesh.start();  
+
+        if (clientNumber == 0){
+            dealer = sesh;
+        } else if (clientNumber == 1){
+            smallBlind = sesh;
+        } else if (clientNumber == 2){
+            bigBlind = sesh;
+        }
+    }
     //Get action from everyone
     public void preflopAction(){
         //Find which player is the Big Blind, and then start action at the player after
@@ -154,11 +178,6 @@ public class TexasCodeEm {
             }
            
         }
-    }
-    
-    public void prepareDeck(){
-        deck = new Deck();
-        deck.shuffle();
     }
     
     public void simulatePlay(){

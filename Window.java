@@ -53,6 +53,10 @@ public class Window extends JPanel{
     public boolean readyDrawOtherCards2 = false;
     public boolean readyDrawOtherCards3 = false;
     public boolean readyDrawOtherCards4 = false;
+    public boolean readyDrawOtherCards5 = false;
+    public boolean readyDrawOtherCards6 = false;
+    public boolean readyDrawOtherCards7 = false;
+    public boolean readyDrawOtherCards8 = false;
     
     private String username;
     
@@ -117,8 +121,18 @@ public class Window extends JPanel{
                 System.out.println(ex); // handle exception...
             }
             g.drawImage(other1card1, 200, 150, widthC, heightC, this);
-            g.drawImage(other1card1, 200 + widthC + 15, 150, widthC, heightC, this);
-            
+            g.drawImage(other1card1, 200 + widthC + 15, 150, widthC, heightC, this);            
+        }
+        
+        if (readyDrawOtherCards2) {
+            try {
+                other2card1 = ImageIO.read(getClass().getResourceAsStream("/img/cards/back.png"));
+                other2card2 = ImageIO.read(getClass().getResourceAsStream("/img/cards/back.png"));
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
+            g.drawImage(other2card1, 450, 130, widthC, heightC, this);
+            g.drawImage(other2card1, 450 + widthC + 15, 130, widthC, heightC, this);     
         }
         
         

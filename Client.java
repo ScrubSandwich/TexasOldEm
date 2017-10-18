@@ -58,8 +58,8 @@ public class Client extends JFrame {
         height = (int) screenSize.getHeight();
         height -= (height / 20);        
         
-        //this.username = JOptionPane.showInputDialog(null, "Username: ", "Enter Username", JOptionPane.INFORMATION_MESSAGE);
-        this.username = "ScrubSandwich";
+        this.username = JOptionPane.showInputDialog(null, "Username: ", "Enter Username", JOptionPane.INFORMATION_MESSAGE);
+        //this.username = "username";
         
         try{            
             setUpUserInterface();
@@ -70,51 +70,13 @@ public class Client extends JFrame {
             btnRaise.setEnabled(false);
             
             //First thing a client does is sends its username
-            sendMessage(this.username);            
+            sendMessage(this.username);         
         }
         catch (Exception e){
             System.out.println(e);
         }        
     }
     
-    private void run(){
-        while (true){
-            // Read server response
-            String message = getMessage();
-            
-            System.out.println("Message: " + message);
-            
-            processRequest(message);            
-        }
-    }
-    
-    //Decide what to do with the recieved message
-    public void processRequest(String message){
-        
-        if (message.equals("nexthand")){
-            playing = true;
-        } else if (message.startsWith("dealcomplete")){
-            //decrypt the cards. format will be: valueNumber:secondValueSecondNumber e.g., JH4S
-
-            //Get each cardValue and suit
-            this.card1Val = message.substring(13, 14);
-            this.card1Suit = message.substring(14, 15);
-
-            this.card2Val = message.substring(16, 17);
-            this.card2Suit = message.substring(17, 18);
-
-            //Now show the cards in the game
-            displayCards();
-        } else if (message.equals("getaction")){
-            System.out.println("Message is getaction");
-            showActionButtons();
-        } else if (message.startsWith("addplayer")){
-            //command format: addplayer|username:chipCount:position (which is an int)
-            
-            displayOtherPlayer1Cards();
-        }
-    }
-
     private void setUpUserInterface(){        
         setTitle("Texas Code 'Em");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -174,13 +136,56 @@ public class Client extends JFrame {
         setVisible(true);       
     }
     
+    private void run(){
+        while (true){
+            // Read server response
+            String message = getMessage();            
+            processRequest(message);            
+        }
+    }
+     
+    //Decide what to do with the recieved message
+    public void processRequest(String message){
+        
+        System.out.println("Message from Server: " + message);
+        
+        if (message.equals("nexthand")){
+            playing = true;
+        } else if (message.startsWith("dealcomplete")){
+            //decrypt the cards. format will be: valueNumber:secondValueSecondNumber e.g., JH4S
+
+            //Get each cardValue and suit
+            this.card1Val = message.substring(13, 14);
+            this.card1Suit = message.substring(14, 15);
+
+            this.card2Val = message.substring(16, 17);
+            this.card2Suit = message.substring(17, 18);
+
+            //Now show the cards in the game
+            displayCards();
+        } else if (message.equals("getaction")){
+            showActionButtons();
+        } else if (message.startsWith("addplayer")){
+            
+            System.out.println("Got a request to add a player");
+            //command format: addplayer|username:position (which is an int)
+            int colon = message.indexOf(":");
+            
+            String user = message.substring(10, colon++ );
+            int position = Integer.parseInt(message.substring(colon));
+            
+            if (!user.equals(this.username)){
+                displayCardsAt(user, position);
+            }
+        }
+    }
+
     @Override
     public void repaint(){
         //window.repaint();
     }
     
-    private void showActionButtons(){
-        
+    private void showActionButtons(){        
         btnCall.setEnabled(true);
         btnFold.setEnabled(true);
         btnCheck.setEnabled(true);
@@ -210,24 +215,56 @@ public class Client extends JFrame {
         } catch (Exception e){
             JOptionPane.showMessageDialog(null, "Cannot read server message.", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
-            return "Cannot get Server Reply";
+            return "Server Terminated";
         }
         
     }
     
     private void displayCards(){
-        System.out.println("Card values for this client: " + this.card1Val + this.card1Suit + " " + this.card2Val + card2Suit);
         window.readyToDrawCards = true;
         window.setCard1Val(this.card1Val);
         window.setCard1Suit(this.card1Suit);
         window.setCard2Val(this.card2Val);
         window.setCard2Suit(this.card2Suit);
-        window.repaint();
+        window.repaint();        
+    }
+    
+    private void displayCardsAt(String user, int position) {        
+        System.out.println("|" + user + "|" + position +  "|");
+        switch (position) {
+            case 1:
+                window.readyDrawOtherCards1 = true;
+                break;
+            case 2:
+                window.readyDrawOtherCards2 = true;
+                break;
+            case 3:
+                window.readyDrawOtherCards3 = true;
+                break;
+            case 4:
+                window.readyDrawOtherCards4 = true;
+                break;
+            case 5:
+                window.readyDrawOtherCards5 = true;
+                break;
+            case 6:
+                window.readyDrawOtherCards6 = true;
+                break;
+            case 7:
+                window.readyDrawOtherCards7 = true;
+                break;
+            case 8:
+                window.readyDrawOtherCards8 = true;
+                break;
+            default:
+                System.out.println("Wrong position in displayCardsAt method");
+                break;
+        }
         
+        window.repaint();
     }
     
     private void displayOtherPlayer1Cards(){
-        window.readyDrawOtherCards1 = true;
         window.repaint();
     }
 

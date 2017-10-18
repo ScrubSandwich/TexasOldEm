@@ -21,10 +21,15 @@ public class Session extends Thread{
     PrintWriter out;
     
     //integers representing position at the table
-    final int DEALER = 0;
-    final int SB = 1;
-    final int BB = 2;
-    final int NB = 3;
+    final int UTG = 1;
+    final int UTG1 = 2;
+    final int UTG2 = 3;
+    final int LOJACK = 4;
+    final int HIGHJACK = 5;
+    final int CUTOFF = 6;
+    final int BUTTON = 7;
+    final int SMALLBLIND = 8;
+    final int BIGBLIND = 9;
     
     private String username;
     private Card card1;
@@ -43,15 +48,7 @@ public class Session extends Thread{
         out = new PrintWriter(socket.getOutputStream(), true);
         
         //Decide what blind this player is
-        if (id == 0){
-            position = DEALER;
-        } else if (id == 1){
-            position = SB;
-        } else if (id == 2){
-            position = BB;
-        } else {
-            position = NB;
-        }
+        position = id + 1;
 
     }
     
@@ -59,20 +56,11 @@ public class Session extends Thread{
     public void run() {
         
         try {
-            //First message recieved from a client is it's username
-            
-            String first = getMessage();
-            
+            //First message recieved from a client is it's username            
+            String first = getMessage();            
             this.setUsername(first);
             
-            //Send info about every other player
-            for (Session player : TexasCodeEm.players){
-                    
-                    if (!player.equals(this)){
-                        player.sendMessage("addplayer|" + player.getUsername() + ":" + player.getChipCount() + ":" + player.getPosition());
-                    }
-                    
-            }
+            addAllPlayers();
             
             while (running){
                 try {
@@ -92,6 +80,15 @@ public class Session extends Thread{
         } catch (IOException ex) {
             Logger.getLogger(Session.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void addAllPlayers() {
+            for (Session player : TexasCodeEm.players){                    
+                    //if (!player.equals(this)){
+                        System.out.println("Adding player: " + player.getUsername());
+                        player.sendMessage("addplayer|" + player.getUsername() +  ":" + player.getPosition());
+                    //}                    
+            }
     }
     
     public void sendMessage(String message){
