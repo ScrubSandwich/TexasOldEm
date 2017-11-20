@@ -78,8 +78,7 @@ public class Window extends JPanel{
     }
     
     @Override
-    public void paint(Graphics g) {
-               
+    public void paint(Graphics g) {               
         g.drawImage(background, 0, 0, this);
         
         //Card Variables
@@ -115,7 +114,12 @@ public class Window extends JPanel{
             g.drawImage(card2, xC, yC, widthC, heightC, this);
         }    
         
-        //draw the other player1's cards if the player exists.
+        drawEveryOtherCards();
+    }
+
+    // Draw the other player1's cards if the player exists.
+    // TODO: check if all players exist 
+    public void drawEveryOtherCards() {        
         if (readyDrawOtherCards1){
             try{
                 other1card1 = ImageIO.read(getClass().getResourceAsStream("/img/cards/back.png"));
@@ -137,9 +141,7 @@ public class Window extends JPanel{
             g.drawImage(other2card1, 450, 130, widthC, heightC, this);
             g.drawImage(other2card1, 450 + widthC + 15, 130, widthC, heightC, this);     
         }
-        
-        
-  }
+    }
     
   public void setReadyToDrawCards(int i){
       if (i == 1){
