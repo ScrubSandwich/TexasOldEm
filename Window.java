@@ -14,17 +14,17 @@ public class Window extends JPanel{
     
     //Player's Cards
     public BufferedImage card1Image;
-    public BufferedImage card2;
+    public BufferedImage card2Image;
     
     //Other Player's cards;
     public BufferedImage other1card1Image;
-    public BufferedImage other1card2;
+    public BufferedImage other1card2Image;
     public BufferedImage other2card1Image;
-    public BufferedImage other2card2;
+    public BufferedImage other2card2Image;
     public BufferedImage other3card1Image;
-    public BufferedImage other3card2;
+    public BufferedImage other3card2Image;
     public BufferedImage other4card1Image;
-    public BufferedImage other4card2;
+    public BufferedImage other4card2Image;
     
     private String card1Val;
     private String card1Suit;
@@ -104,14 +104,14 @@ public class Window extends JPanel{
         //draw the cards if they are dealt
         if (readyToDrawCards){
             try {                
-                card1Image = ImageIO.read(getClass().getResourceAsStream("/img/cards/" + this.card1Val + this.card1Suit + ".png"));
-                card2 = ImageIO.read(getClass().getResourceAsStream("/img/cards/" + this.card2Val + this.card2Suit + ".png"));                                
+                card1Image = ImageIO.read(getClass().getResourceAsStream("/img/cards/" + this.card1.getNumber() + this.card1.getSuit() + ".png"));
+                card2Image = ImageIO.read(getClass().getResourceAsStream("/img/cards/" + this.card2.getNumber() + this.card2.getSuit() + ".png"));                                
             } catch (IOException ex) {
                 System.out.println(ex); // handle exception...
             }
             //Draw Hole Cards
             g.drawImage(card1Image, xC - widthC - 15, yC, widthC, heightC, this);
-            g.drawImage(card2, xC, yC, widthC, heightC, this);
+            g.drawImage(card2Image, xC, yC, widthC, heightC, this);
         }    
         
         drawEveryOtherCards();
@@ -143,49 +143,49 @@ public class Window extends JPanel{
         }
     }
     
-  public void setReadyToDrawCards(int i){
-      if (i == 1){
-          this.readyToDrawCards = true;
-      } else{
-          this.readyToDrawCards = false;
-      }
-  }
-  
+    public void setReadyToDrawCards(int i){
+        if (i == 1){
+            this.readyToDrawCards = true;
+        } else{
+            this.readyToDrawCards = false;
+        }
+    }
+    
     @Override
-  public int getWidth(){
-      return this.width;
-  }
-  
+    public int getWidth(){
+        return this.width;
+    }
+    
     @Override
-  public int getHeight(){
-      return this.height;
-  }
-  
-  //Card fuctions for the Main player
-  public void setCard1Val(String value){
-      this.card1Val = value;
-  }
-  
-  public void setCard1Suit(String s){
-      this.card1Suit = s;
-  }
-  
-  public void setCard2Val(String value){
-      this.card2Val = value;
-  }
-  
-  public void setCard2Suit(String s){
-      this.card2Suit = s;
-  }
+    public int getHeight(){
+        return this.height;
+    }
+    
+    // Card fuctions for the Main player
+    public void setCard1Val(String value){
+        this.card1Val = value;
+    }
+    
+    public void setCard1Suit(String s){
+        this.card1Suit = s;
+    }
+    
+    public void setCard2Val(String value){
+        this.card2Val = value;
+    }
+    
+    public void setCard2Suit(String s){
+        this.card2Suit = s;
+    }
 
-  public void setCard1(Card c) {
-      this.card1 = c;
-  }
+    public void setCard1(Card c) {
+        this.card1 = c;
+    }
 
-  public void setCard2(Card c) {
-      this.card2 = c;
-  }
-  
+    public void setCard2(Card c) {
+        this.card2 = c;
+    }
+    
   
   //Card Fuctions for the Other Player 1
   
