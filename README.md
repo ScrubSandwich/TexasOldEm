@@ -3,4 +3,4 @@ Texas Hold 'Em Java Client
 
 Started January 2017.
 
-Got a long way to go on this project.
+TODO: Work on logic for getting action

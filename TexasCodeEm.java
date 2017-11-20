@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-//Jacob Miecznikowski | Texas Code 'Em | February 9th, 2017 \\
+// Jacob Miecznikowski | Texas Code 'Em | February 9th, 2017 \\
 
 public class TexasCodeEm {
     private Deck deck;
@@ -25,7 +25,6 @@ public class TexasCodeEm {
     private final int PORT = 1492;
     public static int clientNumber = -1;  
     private final int MAX_PLAYERS = 5;
-    private int numPlayers = 0;
     public boolean gameOver = false;
     public boolean handOver = true;
     
@@ -42,8 +41,77 @@ public class TexasCodeEm {
             
     public TexasCodeEm(){
         startGame();
-    }        
+    }
     
+    // The main game loop
+    private void run() {
+        while (!gameOver) {
+            try {
+                getNextClient();
+
+                // If we have enought plauers and the hand isn't currently happening    
+                if (players.size() > 1 && handOver){
+                    dealToTable();
+                    while (!handOver) {                            
+                        getAction();
+                    }                        
+                }
+                
+            } catch (Exception e){
+                try {
+                    endGame();
+                } catch (Exception ex) {
+                }                
+            }
+        }
+    }
+    
+    // Wait for next client connection
+    private void getNextClient() throws Exception {        
+        socket = listener.accept();
+        System.out.println("New player joined and assigned the ID: " + (++clientNumber));
+
+        Session sesh = new Session(clientNumber, socket);                
+        players.add(sesh);
+        sesh.start();  
+
+        if (clientNumber == 0){
+            dealer = sesh;
+        } else if (clientNumber == 1) {
+            smallBlind = sesh;
+        } else if (clientNumber == 2) {
+            bigBlind = sesh;
+        } else if (clientNumber == 3) {
+
+        }
+    }
+    
+    public void getAction(){        
+        //send action to the person at index of startIndex
+        TexasCodeEm.players.get(0).sendMessage("getaction");
+        
+    }
+    
+    public void dealToTable(){
+        
+        for (Session player : TexasCodeEm.players){
+            if (player.isInHand()){
+                player.addCard1(deck.deal());
+                player.addCard2(deck.deal());
+            }            
+        }
+        
+        //send each client a signal to let them know that cards are dealt
+        //so they can be displayed
+        //Example formats for duece of diamonds and ace of spaces: dealcomplete|7D:AS
+        for (Session player : TexasCodeEm.players){
+            if (player.isInHand()){
+                 player.sendMessage("dealcomplete|" + player.getCard1().toString() + ":" + player.getCard2().toString());
+            }
+           
+        }
+    }
+
     public void startGame(){
         prepareDeck();
         startServer();
@@ -71,81 +139,14 @@ public class TexasCodeEm {
         }
     }
     
-    // The main game loop
-    private void run() {
-        while (!gameOver) {
-                try {
-                    getNextClient();
-                                        
-                    if (numPlayers >= -1 && handOver){
-                        handOver = false;
-                        
-                        //prob wrong placement of this car but,
-                        //loop through each session player and set the inHand variable equal to true
-                        for (Session player : players){
-                            player.setInHand(true);
-                        }
-                        
-                        dealToTable();
-                        
-                        //Now send action to the first person after the big blind, and go clockwise
-                        //from that player
-                        preflopAction();
-                        
-                        handOver = true;
-                    }
-
-                } catch (Exception e){
-                    System.out.println("Server Error: " + e);
-                    this.gameOver = true;
-                    try {
-                        closeServerSocket();
-                        sendGameOverSignal();
-                    } catch (Exception ex) {
-                        // Do nothing
-                    }
-                    
-                }
-            }
+    private void endGame() throws Exception{         
+        System.out.println("Server Error");
+        this.gameOver = true;
+        closeServerSocket();
+        sendGameOverSignal();
     }
-    
-    // Wait for next client connection
-    private void getNextClient() throws Exception {        
-        socket = listener.accept();
-        System.out.println("New player joined and assigned the ID: " + (++clientNumber));
 
-        Session sesh = new Session(clientNumber, socket);                
-        players.add(sesh);
-        sesh.start();  
-
-        if (clientNumber == 0){
-            dealer = sesh;
-        } else if (clientNumber == 1){
-            smallBlind = sesh;
-        } else if (clientNumber == 2){
-            bigBlind = sesh;
-        }
-    }
-    //Get action from everyone
-    public void preflopAction(){
-        //Find which player is the Big Blind, and then start action at the player after
-        int startIndex = 0;
-        
-        //fix this when we get a lot of players
-        
-//        for (Session player : TexasCodeEm.players){
-//            if (player.getPosition() == BB){
-//                break;
-//            }
-//            startIndex++;
-//        }
-        
-        //send action to the person at index of startIndex
-        TexasCodeEm.players.get(startIndex).sendMessage("getaction");
-        
-    }
-    
-    private void closeServerSocket() throws IOException{
+     private void closeServerSocket() throws IOException{
         listener.close();
         System.out.println("Closed the Server Socket.");
     }
@@ -154,29 +155,6 @@ public class TexasCodeEm {
         System.out.println("Closing all the clients");
         for (Session player : players){
             player.stopRunning();
-        }
-    }
-    
-    //Deal each person at the table two cards
-    //TODO: change the order of the deal so it goes one card
-    //to each person around the table, then gives them a second card
-    //the second time around
-    public void dealToTable(){
-        for (Session player : TexasCodeEm.players){
-            if (player.isInHand()){
-                player.addCard1(deck.deal());
-                player.addCard2(deck.deal());
-            }            
-        }
-        
-        //send each client a signal to let them know that cards are dealt
-        //so they can be displayed
-        //Example formats for duece of diamonds and ace of spaces: dealcomplete|7D:AS
-        for (Session player : TexasCodeEm.players){
-            if (player.isInHand()){
-                 player.sendMessage("dealcomplete|" + player.getCard1().toString() + ":" + player.getCard2().toString());
-            }
-           
         }
     }
     

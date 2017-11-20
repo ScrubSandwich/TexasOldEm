@@ -33,7 +33,6 @@ public class Deck {
     public Card deal(){
         Card toDeal = deck[currentCard];
         currentCard++;
-        return toDeal;
-        
+        return toDeal;        
     }    
 }

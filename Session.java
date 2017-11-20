@@ -1,4 +1,4 @@
-//Session | The main class for each client that connects
+// Session | The main class for each client that connects
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,8 +53,7 @@ public class Session extends Thread{
     }
     
     @Override
-    public void run() {
-        
+    public void run() {        
         try {
             //First message recieved from a client is it's username            
             String first = getMessage();            
@@ -83,18 +82,16 @@ public class Session extends Thread{
     }
     
     public void addAllPlayers() {
-            for (Session player : TexasCodeEm.players){                    
-                    //if (!player.equals(this)){
-                        System.out.println("Adding player: " + player.getUsername());
-                        player.sendMessage("addplayer|" + player.getUsername() +  ":" + player.getPosition());
-                    //}                    
-            }
+        for (Session player : TexasCodeEm.players){                    
+            //if (!player.equals(this)){
+                System.out.println("Adding player: " + player.getUsername());
+                player.sendMessage("addplayer|" + player.getUsername() +  ":" + player.getPosition());
+            //}                    
+        }
     }
     
     public void sendMessage(String message){
-        //for (Session clients : TexasCodeEm.players){
-                this.out.println(message);
-        //}
+        this.out.println(message);
     }
     
     private String getMessage() throws IOException{

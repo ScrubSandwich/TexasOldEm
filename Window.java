@@ -13,23 +13,26 @@ public class Window extends JPanel{
     public BufferedImage background;
     
     //Player's Cards
-    public BufferedImage card1;
+    public BufferedImage card1Image;
     public BufferedImage card2;
     
     //Other Player's cards;
-    public BufferedImage other1card1;
+    public BufferedImage other1card1Image;
     public BufferedImage other1card2;
-    public BufferedImage other2card1;
+    public BufferedImage other2card1Image;
     public BufferedImage other2card2;
-    public BufferedImage other3card1;
+    public BufferedImage other3card1Image;
     public BufferedImage other3card2;
-    public BufferedImage other4card1;
+    public BufferedImage other4card1Image;
     public BufferedImage other4card2;
     
     private String card1Val;
     private String card1Suit;
     private String card2Val;
     private String card2Suit;
+
+    private Card card1;
+    private Card card2;
     
     private String other1card1Val;
     private String other1card1Suit;
@@ -70,7 +73,7 @@ public class Window extends JPanel{
         try {                
             background = ImageIO.read(getClass().getResourceAsStream("/img/background.jpg"));
        } catch (IOException ex) {
-            System.out.println(ex);// handle exception...
+            System.out.println(ex); // handle exception...
        }
     }
     
@@ -102,13 +105,13 @@ public class Window extends JPanel{
         //draw the cards if they are dealt
         if (readyToDrawCards){
             try {                
-                card1 = ImageIO.read(getClass().getResourceAsStream("/img/cards/" + this.card1Val + this.card1Suit + ".png"));
+                card1Image = ImageIO.read(getClass().getResourceAsStream("/img/cards/" + this.card1Val + this.card1Suit + ".png"));
                 card2 = ImageIO.read(getClass().getResourceAsStream("/img/cards/" + this.card2Val + this.card2Suit + ".png"));                                
             } catch (IOException ex) {
                 System.out.println(ex); // handle exception...
             }
             //Draw Hole Cards
-            g.drawImage(card1, xC - widthC - 15, yC, widthC, heightC, this);
+            g.drawImage(card1Image, xC - widthC - 15, yC, widthC, heightC, this);
             g.drawImage(card2, xC, yC, widthC, heightC, this);
         }    
         
@@ -171,6 +174,14 @@ public class Window extends JPanel{
   
   public void setCard2Suit(String s){
       this.card2Suit = s;
+  }
+
+  public void setCard1(Card c) {
+      this.card1 = c;
+  }
+
+  public void setCard2(Card c) {
+      this.card2 = c;
   }
   
   

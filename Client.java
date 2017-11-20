@@ -49,6 +49,9 @@ public class Client extends JFrame {
     private String card1Suit;
     private String card2Val;
     private String card2Suit;
+
+    private Card card1;
+    private Card card2;
         
     private int currentBet = 0;
     
@@ -155,11 +158,16 @@ public class Client extends JFrame {
             //decrypt the cards. format will be: valueNumber:secondValueSecondNumber e.g., JH4S
 
             //Get each cardValue and suit
-            this.card1Val = message.substring(13, 14);
-            this.card1Suit = message.substring(14, 15);
+            int card1Val = (int) message.substring(13, 14);
+            int card1Suit = (int) message.substring(14, 15);
 
-            this.card2Val = message.substring(16, 17);
-            this.card2Suit = message.substring(17, 18);
+            int card2Val = (int) message.substring(16, 17);
+            int card2Suit = (int) message.substring(17, 18);
+
+            card1 = new Card(card1Val, card1Suit);
+            card2 = new Card(card2Val, card2Suit);
+
+            
 
             //Now show the cards in the game
             displayCards();
@@ -226,6 +234,9 @@ public class Client extends JFrame {
         window.setCard1Suit(this.card1Suit);
         window.setCard2Val(this.card2Val);
         window.setCard2Suit(this.card2Suit);
+
+        window.setCard1(card1);
+        window.serCard2(card2);
         window.repaint();        
     }
     
