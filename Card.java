@@ -16,6 +16,11 @@ public class Card {
         this.suit = suit;
         this.number = number;
     }
+
+    public Card(String suit, String number) {
+        this.suit = getSuitNumber(suit);
+        this.number = getNumberNumber(number);
+    }
     
     public int getNumber(){
         return this.number;
@@ -24,6 +29,57 @@ public class Card {
     public int getSuit(){
         return this.suit;
     }
+
+    public int getNumberNumber(String s) {
+        switch (s) {
+            case "A":   return 1;
+            case "2":   return 2;
+            case "3":   return 3;
+            case "4":   return 4;
+            case "5":   return 5;
+            case "6":   return 6;
+            case "7":   return 7;
+            case "8":   return 8;
+            case "9":   return 9;
+            case "T":   return 10;
+            case "J":   return JACK;
+            case "Q":   return QUEEN;
+            case "K":   return KING;
+        }
+
+        return -1;
+    }
+    
+    public String getNumberString(){
+        switch (number) {
+            case 1:     return "A";
+            case 2:     return "2";
+            case 3:     return "3";
+            case 4:     return "4";
+            case 5:     return "5";
+            case 6:     return "6";
+            case 7:     return "7";
+            case 8:     return "8";
+            case 9:     return "9";
+            case 10:    return "T";
+            case JACK:  return "J";
+            case QUEEN: return "Q";
+            case KING:  return "K";
+        }
+
+        return "INVALID NUMBER";
+    }
+
+    public int getSuitNumber(String s) {
+        switch (s) {
+            case "S":   return SPADE;
+            case "H":   return HEART;
+            case "D":   return DIAMOND;
+            case "C":   return ClUB;
+        }
+
+        return -1;
+    }   
     
     public String getSuitString(){
         switch (suit) {
@@ -32,26 +88,8 @@ public class Card {
            case DIAMOND: return "D";
            case CLUB:    return "C";
         }
+
         return "INVALID SUIT";
-    }
-    
-    public String getNumberString(){
-        switch (number){
-           case 1:     return "A";
-           case 2:     return "2";
-           case 3:     return "3";
-           case 4:     return "4";
-           case 5:     return "5";
-           case 6:     return "6";
-           case 7:     return "7";
-           case 8:     return "8";
-           case 9:     return "9";
-           case 10:    return "T";
-           case JACK:  return "J";
-           case QUEEN: return "Q";
-           case KING:  return "K";
-        }
-        return "INVALID NUMBER";
     }
     
     @Override

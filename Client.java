@@ -137,7 +137,8 @@ public class Client extends JFrame {
     private void run(){
         while (true){
             // Read server response
-            String message = getMessage();            
+            String message = getMessage();
+            System.out.println("Recieved message: " + message);       
             processRequest(message);            
         }
     }
@@ -160,9 +161,7 @@ public class Client extends JFrame {
             int card2Suit = Integer.parseInt(message.substring(17, 18));
 
             card1 = new Card(card1Val, card1Suit);
-            card2 = new Card(card2Val, card2Suit);
-
-            
+            card2 = new Card(card2Val, card2Suit);           
 
             //Now show the cards in the game
             displayCards();

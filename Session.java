@@ -35,7 +35,7 @@ public class Session extends Thread{
     private Card card1;
     private Card card2;
     private int position;
-    private boolean inHand = false;
+    private boolean inHand = true;
     
     private int chipCount = 5000;
     

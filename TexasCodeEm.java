@@ -49,8 +49,9 @@ public class TexasCodeEm {
             try {
                 getNextClient();
 
-                // If we have enought plauers and the hand isn't currently happening    
-                if (players.size() > 1 && handOver){
+                // If we have enought players and the hand isn't currently happening    
+                if (players.size() > -1 && handOver){
+                    
                     dealToTable();
                     while (!handOver) {                            
                         getAction();
@@ -92,8 +93,7 @@ public class TexasCodeEm {
         
     }
     
-    public void dealToTable(){
-        
+    public void dealToTable(){        
         for (Session player : TexasCodeEm.players){
             if (player.isInHand()){
                 player.addCard1(deck.deal());
