@@ -154,14 +154,9 @@ public class Client extends JFrame {
             //decrypt the cards. format will be: valueNumber:secondValueSecondNumber e.g., JH4S
 
             //Get each cardValue and suit
-            int card1Val = Integer.parseInt(message.substring(13, 14));
-            int card1Suit = Integer.parseInt(message.substring(14, 15));
 
-            int card2Val = Integer.parseInt(message.substring(16, 17));
-            int card2Suit = Integer.parseInt(message.substring(17, 18));
-
-            card1 = new Card(card1Val, card1Suit);
-            card2 = new Card(card2Val, card2Suit);           
+            card1 = new Card(message.substring(14, 15), message.substring(13, 14));
+            card2 = new Card(message.substring(17, 18), message.substring(16, 17));           
 
             //Now show the cards in the game
             displayCards();

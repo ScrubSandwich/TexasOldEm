@@ -75,7 +75,7 @@ public class Card {
             case "S":   return SPADE;
             case "H":   return HEART;
             case "D":   return DIAMOND;
-            case "C":   return ClUB;
+            case "C":   return CLUB;
         }
 
         return -1;
