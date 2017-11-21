@@ -28,7 +28,7 @@ public class Client extends JFrame {
     private BufferedReader in;
     
     private int id;
-    private String username;
+    private String username = "test_username";
     private int chipCount = 5000;
     
     private Socket socket;
@@ -56,8 +56,7 @@ public class Client extends JFrame {
         height = (int) screenSize.getHeight();
         height -= (height / 20);        
         
-        this.username = JOptionPane.showInputDialog(null, "Username: ", "Enter Username", JOptionPane.INFORMATION_MESSAGE);
-        //this.username = "username";
+        //this.username = JOptionPane.showInputDialog(null, "Username: ", "Enter Username", JOptionPane.INFORMATION_MESSAGE);
         
         try{            
             setUpUserInterface();

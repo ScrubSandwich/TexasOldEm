@@ -59,7 +59,7 @@ public class Session extends Thread{
             String first = getMessage();            
             this.setUsername(first);
             
-            addAllPlayers();
+            // addAllPlayers();
             
             while (running){
                 try {
