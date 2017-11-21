@@ -2,7 +2,7 @@ public class Message implements java.io.Serializable {
     private String user;
     private String message;
 
-    public Message(String u, Sting m) {
+    public Message(String u, String m) {
         this.user = u;
         this.message = m;
     }
@@ -12,6 +12,6 @@ public class Message implements java.io.Serializable {
     }
 
     public String getUser() {
-        retun this.user;
+        return this.user;
     }
 }

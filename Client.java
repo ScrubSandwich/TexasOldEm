@@ -16,6 +16,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 public class Client extends JFrame {
     
     private Window window;
@@ -26,6 +29,9 @@ public class Client extends JFrame {
     private PrintWriter out;
     private InputStreamReader isr;
     private BufferedReader in;
+    
+    private ObjectInputStream inObject = null;
+    private ObjectOutputStream outObject = null;
     
     private int id;
     private String username = "test_username";
@@ -140,14 +146,17 @@ public class Client extends JFrame {
         out = new PrintWriter(socket.getOutputStream(), true);
         isr = new InputStreamReader(socket.getInputStream());
         in = new BufferedReader(isr);
+
+        inObject = new ObjectInputStream(socket.getInputStream());
+        outObject = new ObjectOutputStream(socket.getOutputStream());
     }
     
     private void run(){
         while (true){
             // Read server response
             String message = getMessage();
-            System.out.println("Recieved message: " + message);       
-            processRequest(message);            
+            System.out.println("Recieved message object: " + message);       
+            processRequest(message);
         }
     }
      
@@ -197,17 +206,35 @@ public class Client extends JFrame {
         btnRaise.setEnabled(true);
     }
     
-    private void sendMessage(String message){
-        out.println(message);
+    private void sendMessage(String message) {
+        try {
+            Message m = new Message(username, message);
+            outObject.writeObject(m);
+        } catch (Exception e) {
+            System.out.println("Error sending message object");
+        }
+        
     }
     
     private void sendMessageWithUserName(String message){
         out.println("<" + this.username + "> " + message);
     }
+
+    // private Message getMessageObject() {
+    //     try {
+    //         return inObject.readObject();
+    //     } catch (Exception e) {
+    //         JOptionPane.showMessageDialog(null, "Cannot read server message.", "Error", JOptionPane.ERROR_MESSAGE);
+    //         System.exit(0);
+    //         return "Server Terminated";
+    //     }
+    // }
     
     private String getMessage(){
         try{
-            return in.readLine();
+            //return in.readLine();
+             Message message = (Message) inObject.readObject();
+             return message.getMessage();
         } catch (Exception e){
             JOptionPane.showMessageDialog(null, "Cannot read server message.", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);

@@ -6,6 +6,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 // Jacob Miecznikowski | Texas Code 'Em | February 9th, 2017 \\
 
 public class TexasCodeEm {
@@ -21,6 +24,9 @@ public class TexasCodeEm {
     InputStreamReader isr;
     BufferedReader in;
     PrintWriter out;
+
+    ObjectInputStream inObject = null;
+    ObjectOutputStream outObject = null;
     
     private final int PORT = 1492;
     public static int clientNumber = -1;  
