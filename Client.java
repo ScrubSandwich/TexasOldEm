@@ -132,6 +132,15 @@ public class Client extends JFrame {
         
         setVisible(true);       
     }
+
+    private void establishConnection() throws IOException{
+        System.out.println("Establishing a connection with the server...");
+        socket = new Socket(SERVERIP, SERVERPORT);
+
+        out = new PrintWriter(socket.getOutputStream(), true);
+        isr = new InputStreamReader(socket.getInputStream());
+        in = new BufferedReader(isr);
+    }
     
     private void run(){
         while (true){
@@ -186,15 +195,6 @@ public class Client extends JFrame {
         btnFold.setEnabled(true);
         btnCheck.setEnabled(true);
         btnRaise.setEnabled(true);
-    }
-    
-    private void establishConnection() throws IOException{
-        System.out.println("Establishing a connection with the server...");
-        socket = new Socket(SERVERIP, SERVERPORT);
-
-        out = new PrintWriter(socket.getOutputStream(), true);
-        isr = new InputStreamReader(socket.getInputStream());
-        in = new BufferedReader(isr);
     }
     
     private void sendMessage(String message){

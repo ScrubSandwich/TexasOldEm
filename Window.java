@@ -101,7 +101,6 @@ public class Window extends JPanel{
                 card1Image = ImageIO.read(getClass().getResourceAsStream("/img/cards/" + this.card1.getNumberString() + this.card1.getSuitString() + ".png"));
                 card2Image = ImageIO.read(getClass().getResourceAsStream("/img/cards/" + this.card2.getNumberString() + this.card2.getSuitString() + ".png"));                                
             } catch (IOException ex) {
-                System.out.println("ERRRRRRRRRRRRROR");
                 System.out.println(ex); // handle exception...
             }
             //Draw Hole Cards
