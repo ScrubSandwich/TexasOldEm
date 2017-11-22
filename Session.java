@@ -8,17 +8,19 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Session extends Thread{
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+public class Session extends Thread {
 
     private volatile boolean running = true;
     
     private final int id;
     private boolean gameOver = false;
-    
+
     Socket socket;
-    InputStreamReader isr;
-    BufferedReader in;
-    PrintWriter out;
+    ObjectInputStream inObject;
+    ObjectOutputStream outObject;
     
     //integers representing position at the table
     final int UTG = 1;
@@ -43,9 +45,9 @@ public class Session extends Thread{
         this.id = id;
         this.socket = socket;
         
-        isr = new InputStreamReader(socket.getInputStream());
-        in = new BufferedReader(isr);
-        out = new PrintWriter(socket.getOutputStream(), true);
+        inObject = new ObjectInputStream(socket.getInputStream());
+        outObject = new ObjectOutputStream(socket.getOutputStream());
+        System.out.println("Successfully open object input and output streams for a session");
         
         //Decide what blind this player is
         position = id + 1;
@@ -69,14 +71,14 @@ public class Session extends Thread{
                     //Decide what to do with the message recieved from the player
                     
                     //do smoething here////
-                } catch (IOException e) {
+                } catch (Exception e) {
                     //sendMessage(this.username + " has left the table");
                     System.out.println(this.username + " has left the table");
                     TexasCodeEm.clientNumber--;
                     stopRunning();
                 }
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Session.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -90,16 +92,40 @@ public class Session extends Thread{
         }
     }
     
-    public void sendMessage(String message){
-        this.out.println(message);
+    public void sendMessage(String message) {
+        try {
+            Message m = new Message(username, message);
+            outObject.writeObject(m);
+        } catch (Exception e) {
+            System.out.println("Error sending message object");
+        }
     }
     
-    private String getMessage() throws IOException{
-        return in.readLine();
+    private String getMessage() {
+        String answer = "";
+        try {
+            Message message = (Message) inObject.readObject();
+            answer = message.getMessage();
+        } catch (Exception e) {
+            System.out.println("Client closed.");
+            stopRunning();
+            return "Client exited";
+        }
+
+        return answer;
     }
 
-    public void stopRunning()    {
+    public void stopRunning() {
+        System.out.println("Closing session connection");
         this.running = false;
+        try {
+            socket.close();
+            outObject.close();
+            inObject.close();
+            this.stop();
+        } catch (Exception e) {
+
+        }
     }
     
     public void addCard1(Card cardInput){

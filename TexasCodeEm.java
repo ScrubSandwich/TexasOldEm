@@ -67,6 +67,7 @@ public class TexasCodeEm {
             } catch (Exception e){
                 try {
                     endGame();
+                    System.out.println(e);
                 } catch (Exception ex) {
                 }                
             }
@@ -74,7 +75,8 @@ public class TexasCodeEm {
     }
     
     // Wait for next client connection
-    private void getNextClient() throws Exception {        
+    private void getNextClient() throws Exception {
+        System.out.println("Waiting for another client to join...");
         socket = listener.accept();
         System.out.println("New player joined and assigned the ID: " + (++clientNumber));
 
@@ -99,11 +101,13 @@ public class TexasCodeEm {
         
     }
     
-    public void dealToTable(){        
+    public void dealToTable(){  
+        System.out.println("Dealing with size of: " + TexasCodeEm.players.size());
         for (Session player : TexasCodeEm.players){
             if (player.isInHand()){
                 player.addCard1(deck.deal());
                 player.addCard2(deck.deal());
+                System.out.println("Done deal");
             }            
         }
         

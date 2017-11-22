@@ -143,12 +143,10 @@ public class Client extends JFrame {
         System.out.println("Establishing a connection with the server...");
         socket = new Socket(SERVERIP, SERVERPORT);
 
-        out = new PrintWriter(socket.getOutputStream(), true);
-        isr = new InputStreamReader(socket.getInputStream());
-        in = new BufferedReader(isr);
-
-        inObject = new ObjectInputStream(socket.getInputStream());
         outObject = new ObjectOutputStream(socket.getOutputStream());
+        inObject = new ObjectInputStream(socket.getInputStream());
+
+        System.out.println("Connection successful");
     }
     
     private void run(){
@@ -210,6 +208,7 @@ public class Client extends JFrame {
         try {
             Message m = new Message(username, message);
             outObject.writeObject(m);
+            System.out.println("Send message: " + m.getMessage());
         } catch (Exception e) {
             System.out.println("Error sending message object");
         }
