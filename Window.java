@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import java.util.ArrayList;
 
 public class Window extends JPanel{
     
@@ -25,6 +26,8 @@ public class Window extends JPanel{
     public BufferedImage other3card2Image;
     public BufferedImage other4card1Image;
     public BufferedImage other4card2Image;
+
+    private ArrayList<BufferedImage> profilePictures;
 
     private Card card1;
     private Card card2;
@@ -62,10 +65,15 @@ public class Window extends JPanel{
         this.width = width;
         this.height = height;  
         this.username = user;
+        this.profilePictures = new ArrayList<BufferedImage>();
         
-        //open the background image
-        try {                
+        
+        try {
+            //open the background image              
             background = ImageIO.read(getClass().getResourceAsStream("/img/background.jpg"));
+
+            // Add the player's profile picture
+            profilePictures.add(ImageIO.read(getClass().getResourceAsStream("/img/testProfilePicture.jpg")));
        } catch (IOException ex) {
             System.out.println(ex); // handle exception...
        }
@@ -84,16 +92,19 @@ public class Window extends JPanel{
         //Draw Hold Card outline
         //TODO draw backs of cards here
         g.setColor(Color.white);
-        g.drawRect(xC - widthC - 15, yC, widthC, heightC);
-        g.fillRect(xC - widthC - 15, yC, widthC, heightC);
-        g.drawRect(xC, yC, widthC, heightC);
-        g.fillRect(xC, yC, widthC, heightC);
+        g.drawRect(xC - widthC + 75, yC, widthC, heightC);
+        g.fillRect(xC - widthC + 75, yC, widthC, heightC);
+        g.drawRect(xC + 40, yC, widthC, heightC);
+        g.fillRect(xC + 40, yC, widthC, heightC);
         
         //Draw username
         g.setColor(Color.BLACK);
         Font font = new Font ("Courier New", Font.BOLD, 24);
         g.setFont(font);
-        g.drawString(this.username, xC + widthC - 175, yC + 150);
+        g.drawString(this.username, xC + widthC - 135, yC + 150);
+
+        // Draw profile picture
+        g.drawImage(profilePictures.get(0), 765, 750, this);
         
         //draw the cards if they are dealt
         if (readyToDrawCards){
@@ -104,8 +115,8 @@ public class Window extends JPanel{
                 System.out.println(ex); // handle exception...
             }
             //Draw Hole Cards
-            g.drawImage(card1Image, xC - widthC - 15, yC, widthC, heightC, this);
-            g.drawImage(card2Image, xC, yC, widthC, heightC, this);
+            g.drawImage(card1Image, xC - widthC + 75, yC, widthC, heightC, this);
+            g.drawImage(card2Image, xC + 40, yC, widthC, heightC, this);
         }    
         
         // TODO: need to pass in more stuff here

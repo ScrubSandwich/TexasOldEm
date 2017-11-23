@@ -97,8 +97,7 @@ public class TexasCodeEm {
     
     public void getAction(){        
         //send action to the person at index of startIndex
-        TexasCodeEm.players.get(0).sendMessage("getaction");
-        
+        TexasCodeEm.players.get(0).sendMessage("getaction");        
     }
     
     public void dealToTable(){  
@@ -145,11 +144,11 @@ public class TexasCodeEm {
             run();
             
         } catch (Exception e){
-            System.out.println(e);
+            System.out.println("Error: " + e + "\nPort number " + PORT + " is already in use.");
         }
     }
     
-    private void endGame() throws Exception{         
+    private void endGame() throws Exception {         
         System.out.println("Server Error");
         this.gameOver = true;
         closeServerSocket();

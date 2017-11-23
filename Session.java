@@ -1,4 +1,4 @@
-// Session | The main class for each client that connects
+// Session.java | The main class for each client that connects
 
 import java.io.BufferedReader;
 import java.io.IOException;
