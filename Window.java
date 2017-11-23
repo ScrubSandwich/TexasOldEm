@@ -69,13 +69,17 @@ public class Window extends JPanel{
         
         
         try {
-            //open the background image              
+            // open the background image              
             background = ImageIO.read(getClass().getResourceAsStream("/img/background.jpg"));
+
+            // Set the cards to be blank
+            card1Image = ImageIO.read(getClass().getResourceAsStream("/img/cards/back.png"));
+            card2Image = ImageIO.read(getClass().getResourceAsStream("/img/cards/back.png"));
 
             // Add the player's profile picture
             profilePictures.add(ImageIO.read(getClass().getResourceAsStream("/img/testProfilePicture.jpg")));
        } catch (IOException ex) {
-            System.out.println(ex); // handle exception...
+            System.out.println("Error opening image files: " + ex); // handle exception...
        }
     }
     
@@ -114,10 +118,11 @@ public class Window extends JPanel{
             } catch (IOException ex) {
                 System.out.println(ex); // handle exception...
             }
-            //Draw Hole Cards
-            g.drawImage(card1Image, xC - widthC + 75, yC, widthC, heightC, this);
-            g.drawImage(card2Image, xC + 40, yC, widthC, heightC, this);
-        }    
+        }
+
+        //Draw Hole Cards
+        g.drawImage(card1Image, xC - widthC + 75, yC, widthC, heightC, this);
+        g.drawImage(card2Image, xC + 40, yC, widthC, heightC, this);
         
         // TODO: need to pass in more stuff here
         // drawEveryOtherCards(g);
@@ -149,8 +154,8 @@ public class Window extends JPanel{
         // }
     }
     
-    public void setReadyToDrawCards(int i){
-        if (i == 1){
+    public void setReadyToDrawCards(boolean i){
+        if (i){
             this.readyToDrawCards = true;
         } else{
             this.readyToDrawCards = false;

@@ -56,7 +56,7 @@ public class TexasCodeEm {
                 getNextClient();
 
                 // If we have enought players and the hand isn't currently happening    
-                if (players.size() > -1 && handOver){
+                if (players.size() > 1 && handOver){
                     
                     dealToTable();
                     while (!handOver) {                            
@@ -101,12 +101,11 @@ public class TexasCodeEm {
     }
     
     public void dealToTable(){  
-        System.out.println("Dealing with size of: " + TexasCodeEm.players.size());
+        System.out.println("Dealing to " + TexasCodeEm.players.size() + " players");
         for (Session player : TexasCodeEm.players){
             if (player.isInHand()){
                 player.addCard1(deck.deal());
                 player.addCard2(deck.deal());
-                System.out.println("Done deal");
             }            
         }
         
