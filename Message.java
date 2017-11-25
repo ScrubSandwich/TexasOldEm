@@ -1,7 +1,7 @@
 public class Message implements java.io.Serializable {
     private String user;
     private String message;
-    private String argument;
+    private String argument1;
 
     public Message(String u, String m) {
         this.user = u;
@@ -11,7 +11,7 @@ public class Message implements java.io.Serializable {
     public Message(String u, String m, String a) {
         this.user = u;
         this.message = m;
-        this.argument = a;
+        this.argument1 = a;
     }
 
     public String getMessage() {
@@ -20,5 +20,9 @@ public class Message implements java.io.Serializable {
 
     public String getUser() {
         return this.user;
+    }
+
+    public String getArgument1() {
+        return this.argument1;
     }
 }

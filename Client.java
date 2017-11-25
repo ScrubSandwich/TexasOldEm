@@ -79,6 +79,13 @@ public class Client extends JFrame {
             System.out.println(e);
         }        
     }
+
+    private void run(){
+        while (true){
+            Message message = getMessage();
+            processRequest(message);
+        }
+    }
     
     private void setUpUserInterface(){        
         setTitle("Texas Code 'Em");
@@ -97,8 +104,7 @@ public class Client extends JFrame {
         buttonPane = new ButtonPane();
         buttonPane.setLayout(new GridLayout(0, 6, 10, 0));
         add(buttonPane, BorderLayout.SOUTH);
-                
-        //buttonPane.add(btnCheck);
+        
         buttonPane.add(btnCall);
         buttonPane.add(btnRaise);
         buttonPane.add(btnFold);
@@ -148,18 +154,10 @@ public class Client extends JFrame {
 
         System.out.println("Connection successful");
     }
-    
-    private void run(){
-        while (true){
-            // Read server response
-            String message = getMessage();
-            System.out.println("Recieved message object: " + message);       
-            processRequest(message);
-        }
-    }
      
     //Decide what to do with the recieved message
-    public void processRequest(String message){
+    public void processRequest(Message m){
+        String message = m.getMessage();
         
         System.out.println("Message from Server: " + message);
         
@@ -191,11 +189,6 @@ public class Client extends JFrame {
             }
         }
     }
-
-    @Override
-    public void repaint(){
-        //window.repaint();
-    }
     
     private void showActionButtons(){        
         btnCall.setEnabled(true);
@@ -208,7 +201,7 @@ public class Client extends JFrame {
         try {
             Message m = new Message(username, message);
             outObject.writeObject(m);
-            System.out.println("Send message: " + m.getMessage());
+            System.out.println("Sent message: " + m.getMessage());
         } catch (Exception e) {
             System.out.println("Error sending message object");
         }
@@ -218,26 +211,14 @@ public class Client extends JFrame {
     private void sendMessageWithUserName(String message){
         out.println("<" + this.username + "> " + message);
     }
-
-    // private Message getMessageObject() {
-    //     try {
-    //         return inObject.readObject();
-    //     } catch (Exception e) {
-    //         JOptionPane.showMessageDialog(null, "Cannot read server message.", "Error", JOptionPane.ERROR_MESSAGE);
-    //         System.exit(0);
-    //         return "Server Terminated";
-    //     }
-    // }
     
-    private String getMessage(){
+    private Message getMessage(){
         try{
-            //return in.readLine();
-             Message message = (Message) inObject.readObject();
-             return message.getMessage();
+            return (Message) inObject.readObject();
         } catch (Exception e){
             JOptionPane.showMessageDialog(null, "Cannot read server message.", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
-            return "Server Terminated";
+            return new Message(this.username, "Error");
         }
         
     }
